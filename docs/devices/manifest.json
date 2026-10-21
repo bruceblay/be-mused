@@ -5,9 +5,53 @@
       240
     ],
     "avatar": 128,
-    "frames": 101,
-    "duration_ms": 6730,
-    "bytes": 290617
+    "frames": 176,
+    "duration_ms": 11730,
+    "bytes": 405588,
+    "segments": [
+      {
+        "character": "Tayne",
+        "mode": "Idle",
+        "first_frame": 0,
+        "frames": 24
+      },
+      {
+        "character": "Celery Man",
+        "mode": "Idle",
+        "first_frame": 24,
+        "frames": 24
+      },
+      {
+        "character": "Oyster",
+        "mode": "Idle",
+        "first_frame": 48,
+        "frames": 16
+      },
+      {
+        "character": "Oyster",
+        "mode": "Thinking / printout",
+        "first_frame": 64,
+        "frames": 37
+      },
+      {
+        "character": "Eggman",
+        "mode": "Startup / front reveal",
+        "first_frame": 101,
+        "frames": 27
+      },
+      {
+        "character": "Eggman",
+        "mode": "Ready",
+        "first_frame": 128,
+        "frames": 15
+      },
+      {
+        "character": "Eggman",
+        "mode": "Power off / pants lowering",
+        "first_frame": 143,
+        "frames": 33
+      }
+    ]
   },
   "plus2": {
     "panel": [
@@ -15,9 +59,53 @@
       240
     ],
     "avatar": 128,
-    "frames": 101,
-    "duration_ms": 6730,
-    "bytes": 291257
+    "frames": 176,
+    "duration_ms": 11730,
+    "bytes": 422543,
+    "segments": [
+      {
+        "character": "Tayne",
+        "mode": "Idle",
+        "first_frame": 0,
+        "frames": 24
+      },
+      {
+        "character": "Celery Man",
+        "mode": "Idle",
+        "first_frame": 24,
+        "frames": 24
+      },
+      {
+        "character": "Oyster",
+        "mode": "Idle",
+        "first_frame": 48,
+        "frames": 16
+      },
+      {
+        "character": "Oyster",
+        "mode": "Thinking / printout",
+        "first_frame": 64,
+        "frames": 37
+      },
+      {
+        "character": "Eggman",
+        "mode": "Startup / front reveal",
+        "first_frame": 101,
+        "frames": 27
+      },
+      {
+        "character": "Eggman",
+        "mode": "Ready",
+        "first_frame": 128,
+        "frames": 15
+      },
+      {
+        "character": "Eggman",
+        "mode": "Power off / pants lowering",
+        "first_frame": 143,
+        "frames": 33
+      }
+    ]
   },
   "aipi": {
     "panel": [
@@ -25,9 +113,53 @@
       128
     ],
     "avatar": 96,
-    "frames": 101,
-    "duration_ms": 6730,
-    "bytes": 408806
+    "frames": 176,
+    "duration_ms": 11730,
+    "bytes": 541383,
+    "segments": [
+      {
+        "character": "Tayne",
+        "mode": "Idle",
+        "first_frame": 0,
+        "frames": 24
+      },
+      {
+        "character": "Celery Man",
+        "mode": "Idle",
+        "first_frame": 24,
+        "frames": 24
+      },
+      {
+        "character": "Oyster",
+        "mode": "Idle",
+        "first_frame": 48,
+        "frames": 16
+      },
+      {
+        "character": "Oyster",
+        "mode": "Thinking / printout",
+        "first_frame": 64,
+        "frames": 37
+      },
+      {
+        "character": "Eggman",
+        "mode": "Startup / front reveal",
+        "first_frame": 101,
+        "frames": 27
+      },
+      {
+        "character": "Eggman",
+        "mode": "Ready",
+        "first_frame": 128,
+        "frames": 15
+      },
+      {
+        "character": "Eggman",
+        "mode": "Power off / pants lowering",
+        "first_frame": 143,
+        "frames": 33
+      }
+    ]
   },
   "watcher": {
     "panel": [
@@ -35,9 +167,53 @@
       412
     ],
     "avatar": 256,
-    "frames": 101,
-    "duration_ms": 6730,
-    "bytes": 336354
+    "frames": 176,
+    "duration_ms": 11730,
+    "bytes": 448584,
+    "segments": [
+      {
+        "character": "Tayne",
+        "mode": "Idle",
+        "first_frame": 0,
+        "frames": 24
+      },
+      {
+        "character": "Celery Man",
+        "mode": "Idle",
+        "first_frame": 24,
+        "frames": 24
+      },
+      {
+        "character": "Oyster",
+        "mode": "Idle",
+        "first_frame": 48,
+        "frames": 16
+      },
+      {
+        "character": "Oyster",
+        "mode": "Thinking / printout",
+        "first_frame": 64,
+        "frames": 37
+      },
+      {
+        "character": "Eggman",
+        "mode": "Startup / front reveal",
+        "first_frame": 101,
+        "frames": 27
+      },
+      {
+        "character": "Eggman",
+        "mode": "Ready",
+        "first_frame": 128,
+        "frames": 15
+      },
+      {
+        "character": "Eggman",
+        "mode": "Power off / pants lowering",
+        "first_frame": 143,
+        "frames": 33
+      }
+    ]
   },
   "s3": {
     "panel": [
@@ -45,9 +221,53 @@
       466
     ],
     "avatar": 320,
-    "frames": 101,
-    "duration_ms": 6730,
-    "bytes": 367976
+    "frames": 176,
+    "duration_ms": 11730,
+    "bytes": 483909,
+    "segments": [
+      {
+        "character": "Tayne",
+        "mode": "Idle",
+        "first_frame": 0,
+        "frames": 24
+      },
+      {
+        "character": "Celery Man",
+        "mode": "Idle",
+        "first_frame": 24,
+        "frames": 24
+      },
+      {
+        "character": "Oyster",
+        "mode": "Idle",
+        "first_frame": 48,
+        "frames": 16
+      },
+      {
+        "character": "Oyster",
+        "mode": "Thinking / printout",
+        "first_frame": 64,
+        "frames": 37
+      },
+      {
+        "character": "Eggman",
+        "mode": "Startup / front reveal",
+        "first_frame": 101,
+        "frames": 27
+      },
+      {
+        "character": "Eggman",
+        "mode": "Ready",
+        "first_frame": 128,
+        "frames": 15
+      },
+      {
+        "character": "Eggman",
+        "mode": "Power off / pants lowering",
+        "first_frame": 143,
+        "frames": 33
+      }
+    ]
   },
   "c6": {
     "panel": [
@@ -55,8 +275,754 @@
       448
     ],
     "avatar": 320,
-    "frames": 101,
-    "duration_ms": 6730,
-    "bytes": 382714
+    "frames": 176,
+    "duration_ms": 11730,
+    "bytes": 502549,
+    "segments": [
+      {
+        "character": "Tayne",
+        "mode": "Idle",
+        "first_frame": 0,
+        "frames": 24
+      },
+      {
+        "character": "Celery Man",
+        "mode": "Idle",
+        "first_frame": 24,
+        "frames": 24
+      },
+      {
+        "character": "Oyster",
+        "mode": "Idle",
+        "first_frame": 48,
+        "frames": 16
+      },
+      {
+        "character": "Oyster",
+        "mode": "Thinking / printout",
+        "first_frame": 64,
+        "frames": 37
+      },
+      {
+        "character": "Eggman",
+        "mode": "Startup / front reveal",
+        "first_frame": 101,
+        "frames": 27
+      },
+      {
+        "character": "Eggman",
+        "mode": "Ready",
+        "first_frame": 128,
+        "frames": 15
+      },
+      {
+        "character": "Eggman",
+        "mode": "Power off / pants lowering",
+        "first_frame": 143,
+        "frames": 33
+      }
+    ]
+  },
+  "s3n": {
+    "panel": [
+      466,
+      466
+    ],
+    "avatar": 320,
+    "frames": 176,
+    "duration_ms": 11730,
+    "bytes": 482807,
+    "segments": [
+      {
+        "character": "Tayne",
+        "mode": "Idle",
+        "first_frame": 0,
+        "frames": 24
+      },
+      {
+        "character": "Celery Man",
+        "mode": "Idle",
+        "first_frame": 24,
+        "frames": 24
+      },
+      {
+        "character": "Oyster",
+        "mode": "Idle",
+        "first_frame": 48,
+        "frames": 16
+      },
+      {
+        "character": "Oyster",
+        "mode": "Thinking / printout",
+        "first_frame": 64,
+        "frames": 37
+      },
+      {
+        "character": "Eggman",
+        "mode": "Startup / front reveal",
+        "first_frame": 101,
+        "frames": 27
+      },
+      {
+        "character": "Eggman",
+        "mode": "Ready",
+        "first_frame": 128,
+        "frames": 15
+      },
+      {
+        "character": "Eggman",
+        "mode": "Power off / pants lowering",
+        "first_frame": 143,
+        "frames": 33
+      }
+    ]
+  },
+  "s3-216": {
+    "panel": [
+      480,
+      480
+    ],
+    "avatar": 320,
+    "frames": 176,
+    "duration_ms": 11730,
+    "bytes": 478503,
+    "segments": [
+      {
+        "character": "Tayne",
+        "mode": "Idle",
+        "first_frame": 0,
+        "frames": 24
+      },
+      {
+        "character": "Celery Man",
+        "mode": "Idle",
+        "first_frame": 24,
+        "frames": 24
+      },
+      {
+        "character": "Oyster",
+        "mode": "Idle",
+        "first_frame": 48,
+        "frames": 16
+      },
+      {
+        "character": "Oyster",
+        "mode": "Thinking / printout",
+        "first_frame": 64,
+        "frames": 37
+      },
+      {
+        "character": "Eggman",
+        "mode": "Startup / front reveal",
+        "first_frame": 101,
+        "frames": 27
+      },
+      {
+        "character": "Eggman",
+        "mode": "Ready",
+        "first_frame": 128,
+        "frames": 15
+      },
+      {
+        "character": "Eggman",
+        "mode": "Power off / pants lowering",
+        "first_frame": 143,
+        "frames": 33
+      }
+    ]
+  },
+  "box3": {
+    "panel": [
+      320,
+      240
+    ],
+    "avatar": 160,
+    "frames": 176,
+    "duration_ms": 11730,
+    "bytes": 413818,
+    "segments": [
+      {
+        "character": "Tayne",
+        "mode": "Idle",
+        "first_frame": 0,
+        "frames": 24
+      },
+      {
+        "character": "Celery Man",
+        "mode": "Idle",
+        "first_frame": 24,
+        "frames": 24
+      },
+      {
+        "character": "Oyster",
+        "mode": "Idle",
+        "first_frame": 48,
+        "frames": 16
+      },
+      {
+        "character": "Oyster",
+        "mode": "Thinking / printout",
+        "first_frame": 64,
+        "frames": 37
+      },
+      {
+        "character": "Eggman",
+        "mode": "Startup / front reveal",
+        "first_frame": 101,
+        "frames": 27
+      },
+      {
+        "character": "Eggman",
+        "mode": "Ready",
+        "first_frame": 128,
+        "frames": 15
+      },
+      {
+        "character": "Eggman",
+        "mode": "Power off / pants lowering",
+        "first_frame": 143,
+        "frames": 33
+      }
+    ]
+  },
+  "c6-206": {
+    "panel": [
+      410,
+      502
+    ],
+    "avatar": 320,
+    "frames": 176,
+    "duration_ms": 11730,
+    "bytes": 469305,
+    "segments": [
+      {
+        "character": "Tayne",
+        "mode": "Idle",
+        "first_frame": 0,
+        "frames": 24
+      },
+      {
+        "character": "Celery Man",
+        "mode": "Idle",
+        "first_frame": 24,
+        "frames": 24
+      },
+      {
+        "character": "Oyster",
+        "mode": "Idle",
+        "first_frame": 48,
+        "frames": 16
+      },
+      {
+        "character": "Oyster",
+        "mode": "Thinking / printout",
+        "first_frame": 64,
+        "frames": 37
+      },
+      {
+        "character": "Eggman",
+        "mode": "Startup / front reveal",
+        "first_frame": 101,
+        "frames": 27
+      },
+      {
+        "character": "Eggman",
+        "mode": "Ready",
+        "first_frame": 128,
+        "frames": 15
+      },
+      {
+        "character": "Eggman",
+        "mode": "Power off / pants lowering",
+        "first_frame": 143,
+        "frames": 33
+      }
+    ]
+  },
+  "cardputer-adv": {
+    "panel": [
+      240,
+      135
+    ],
+    "avatar": 90,
+    "frames": 176,
+    "duration_ms": 11730,
+    "bytes": 290341,
+    "segments": [
+      {
+        "character": "Tayne",
+        "mode": "Idle",
+        "first_frame": 0,
+        "frames": 24
+      },
+      {
+        "character": "Celery Man",
+        "mode": "Idle",
+        "first_frame": 24,
+        "frames": 24
+      },
+      {
+        "character": "Oyster",
+        "mode": "Idle",
+        "first_frame": 48,
+        "frames": 16
+      },
+      {
+        "character": "Oyster",
+        "mode": "Thinking / printout",
+        "first_frame": 64,
+        "frames": 37
+      },
+      {
+        "character": "Eggman",
+        "mode": "Startup / front reveal",
+        "first_frame": 101,
+        "frames": 27
+      },
+      {
+        "character": "Eggman",
+        "mode": "Ready",
+        "first_frame": 128,
+        "frames": 15
+      },
+      {
+        "character": "Eggman",
+        "mode": "Power off / pants lowering",
+        "first_frame": 143,
+        "frames": 33
+      }
+    ]
+  },
+  "stopwatch": {
+    "panel": [
+      466,
+      466
+    ],
+    "avatar": 320,
+    "frames": 176,
+    "duration_ms": 11730,
+    "bytes": 485767,
+    "segments": [
+      {
+        "character": "Tayne",
+        "mode": "Idle",
+        "first_frame": 0,
+        "frames": 24
+      },
+      {
+        "character": "Celery Man",
+        "mode": "Idle",
+        "first_frame": 24,
+        "frames": 24
+      },
+      {
+        "character": "Oyster",
+        "mode": "Idle",
+        "first_frame": 48,
+        "frames": 16
+      },
+      {
+        "character": "Oyster",
+        "mode": "Thinking / printout",
+        "first_frame": 64,
+        "frames": 37
+      },
+      {
+        "character": "Eggman",
+        "mode": "Startup / front reveal",
+        "first_frame": 101,
+        "frames": 27
+      },
+      {
+        "character": "Eggman",
+        "mode": "Ready",
+        "first_frame": 128,
+        "frames": 15
+      },
+      {
+        "character": "Eggman",
+        "mode": "Power off / pants lowering",
+        "first_frame": 143,
+        "frames": 33
+      }
+    ]
+  },
+  "cores3": {
+    "panel": [
+      320,
+      240
+    ],
+    "avatar": 160,
+    "frames": 176,
+    "duration_ms": 11730,
+    "bytes": 411820,
+    "segments": [
+      {
+        "character": "Tayne",
+        "mode": "Idle",
+        "first_frame": 0,
+        "frames": 24
+      },
+      {
+        "character": "Celery Man",
+        "mode": "Idle",
+        "first_frame": 24,
+        "frames": 24
+      },
+      {
+        "character": "Oyster",
+        "mode": "Idle",
+        "first_frame": 48,
+        "frames": 16
+      },
+      {
+        "character": "Oyster",
+        "mode": "Thinking / printout",
+        "first_frame": 64,
+        "frames": 37
+      },
+      {
+        "character": "Eggman",
+        "mode": "Startup / front reveal",
+        "first_frame": 101,
+        "frames": 27
+      },
+      {
+        "character": "Eggman",
+        "mode": "Ready",
+        "first_frame": 128,
+        "frames": 15
+      },
+      {
+        "character": "Eggman",
+        "mode": "Power off / pants lowering",
+        "first_frame": 143,
+        "frames": 33
+      }
+    ]
+  },
+  "core2": {
+    "panel": [
+      320,
+      240
+    ],
+    "avatar": 160,
+    "frames": 176,
+    "duration_ms": 11730,
+    "bytes": 403622,
+    "segments": [
+      {
+        "character": "Tayne",
+        "mode": "Idle",
+        "first_frame": 0,
+        "frames": 24
+      },
+      {
+        "character": "Celery Man",
+        "mode": "Idle",
+        "first_frame": 24,
+        "frames": 24
+      },
+      {
+        "character": "Oyster",
+        "mode": "Idle",
+        "first_frame": 48,
+        "frames": 16
+      },
+      {
+        "character": "Oyster",
+        "mode": "Thinking / printout",
+        "first_frame": 64,
+        "frames": 37
+      },
+      {
+        "character": "Eggman",
+        "mode": "Startup / front reveal",
+        "first_frame": 101,
+        "frames": 27
+      },
+      {
+        "character": "Eggman",
+        "mode": "Ready",
+        "first_frame": 128,
+        "frames": 15
+      },
+      {
+        "character": "Eggman",
+        "mode": "Power off / pants lowering",
+        "first_frame": 143,
+        "frames": 33
+      }
+    ]
+  },
+  "fnk0104b": {
+    "panel": [
+      240,
+      320
+    ],
+    "avatar": 240,
+    "frames": 176,
+    "duration_ms": 11730,
+    "bytes": 557670,
+    "segments": [
+      {
+        "character": "Tayne",
+        "mode": "Idle",
+        "first_frame": 0,
+        "frames": 24
+      },
+      {
+        "character": "Celery Man",
+        "mode": "Idle",
+        "first_frame": 24,
+        "frames": 24
+      },
+      {
+        "character": "Oyster",
+        "mode": "Idle",
+        "first_frame": 48,
+        "frames": 16
+      },
+      {
+        "character": "Oyster",
+        "mode": "Thinking / printout",
+        "first_frame": 64,
+        "frames": 37
+      },
+      {
+        "character": "Eggman",
+        "mode": "Startup / front reveal",
+        "first_frame": 101,
+        "frames": 27
+      },
+      {
+        "character": "Eggman",
+        "mode": "Ready",
+        "first_frame": 128,
+        "frames": 15
+      },
+      {
+        "character": "Eggman",
+        "mode": "Power off / pants lowering",
+        "first_frame": 143,
+        "frames": 33
+      }
+    ]
+  },
+  "jc3248w535": {
+    "panel": [
+      320,
+      480
+    ],
+    "avatar": 320,
+    "frames": 176,
+    "duration_ms": 11730,
+    "bytes": 480782,
+    "segments": [
+      {
+        "character": "Tayne",
+        "mode": "Idle",
+        "first_frame": 0,
+        "frames": 24
+      },
+      {
+        "character": "Celery Man",
+        "mode": "Idle",
+        "first_frame": 24,
+        "frames": 24
+      },
+      {
+        "character": "Oyster",
+        "mode": "Idle",
+        "first_frame": 48,
+        "frames": 16
+      },
+      {
+        "character": "Oyster",
+        "mode": "Thinking / printout",
+        "first_frame": 64,
+        "frames": 37
+      },
+      {
+        "character": "Eggman",
+        "mode": "Startup / front reveal",
+        "first_frame": 101,
+        "frames": 27
+      },
+      {
+        "character": "Eggman",
+        "mode": "Ready",
+        "first_frame": 128,
+        "frames": 15
+      },
+      {
+        "character": "Eggman",
+        "mode": "Power off / pants lowering",
+        "first_frame": 143,
+        "frames": 33
+      }
+    ]
+  },
+  "lcd7": {
+    "panel": [
+      800,
+      480
+    ],
+    "avatar": 288,
+    "frames": 176,
+    "duration_ms": 11730,
+    "bytes": 275593,
+    "segments": [
+      {
+        "character": "Tayne",
+        "mode": "Idle",
+        "first_frame": 0,
+        "frames": 24
+      },
+      {
+        "character": "Celery Man",
+        "mode": "Idle",
+        "first_frame": 24,
+        "frames": 24
+      },
+      {
+        "character": "Oyster",
+        "mode": "Idle",
+        "first_frame": 48,
+        "frames": 16
+      },
+      {
+        "character": "Oyster",
+        "mode": "Thinking / printout",
+        "first_frame": 64,
+        "frames": 37
+      },
+      {
+        "character": "Eggman",
+        "mode": "Startup / front reveal",
+        "first_frame": 101,
+        "frames": 27
+      },
+      {
+        "character": "Eggman",
+        "mode": "Ready",
+        "first_frame": 128,
+        "frames": 15
+      },
+      {
+        "character": "Eggman",
+        "mode": "Power off / pants lowering",
+        "first_frame": 143,
+        "frames": 33
+      }
+    ]
+  },
+  "vn183": {
+    "panel": [
+      284,
+      240
+    ],
+    "avatar": 160,
+    "frames": 176,
+    "duration_ms": 11730,
+    "bytes": 434433,
+    "segments": [
+      {
+        "character": "Tayne",
+        "mode": "Idle",
+        "first_frame": 0,
+        "frames": 24
+      },
+      {
+        "character": "Celery Man",
+        "mode": "Idle",
+        "first_frame": 24,
+        "frames": 24
+      },
+      {
+        "character": "Oyster",
+        "mode": "Idle",
+        "first_frame": 48,
+        "frames": 16
+      },
+      {
+        "character": "Oyster",
+        "mode": "Thinking / printout",
+        "first_frame": 64,
+        "frames": 37
+      },
+      {
+        "character": "Eggman",
+        "mode": "Startup / front reveal",
+        "first_frame": 101,
+        "frames": 27
+      },
+      {
+        "character": "Eggman",
+        "mode": "Ready",
+        "first_frame": 128,
+        "frames": 15
+      },
+      {
+        "character": "Eggman",
+        "mode": "Power off / pants lowering",
+        "first_frame": 143,
+        "frames": 33
+      }
+    ]
+  },
+  "ai-passport": {
+    "panel": [
+      240,
+      320
+    ],
+    "avatar": 240,
+    "frames": 176,
+    "duration_ms": 11730,
+    "bytes": 558026,
+    "segments": [
+      {
+        "character": "Tayne",
+        "mode": "Idle",
+        "first_frame": 0,
+        "frames": 24
+      },
+      {
+        "character": "Celery Man",
+        "mode": "Idle",
+        "first_frame": 24,
+        "frames": 24
+      },
+      {
+        "character": "Oyster",
+        "mode": "Idle",
+        "first_frame": 48,
+        "frames": 16
+      },
+      {
+        "character": "Oyster",
+        "mode": "Thinking / printout",
+        "first_frame": 64,
+        "frames": 37
+      },
+      {
+        "character": "Eggman",
+        "mode": "Startup / front reveal",
+        "first_frame": 101,
+        "frames": 27
+      },
+      {
+        "character": "Eggman",
+        "mode": "Ready",
+        "first_frame": 128,
+        "frames": 15
+      },
+      {
+        "character": "Eggman",
+        "mode": "Power off / pants lowering",
+        "first_frame": 143,
+        "frames": 33
+      }
+    ]
   }
 }

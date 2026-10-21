@@ -14,14 +14,15 @@ from PIL import Image
 HERE = Path(__file__).resolve().parent
 ROOT = HERE.parents[1]
 ap = argparse.ArgumentParser()
-ap.add_argument('--character', choices=['tayne', 'celery-man', 'oyster'], default='tayne')
+ap.add_argument('--character', choices=['tayne', 'celery-man', 'oyster', 'eggman'], default='tayne')
 ap.add_argument('--sdk', type=Path, default=ROOT.parent/'muse-gadget-sdk')
 ap.add_argument('--size', type=int, default=320, help='GIF width and height, from 1 to 512 pixels')
 ap.add_argument('--output', type=Path, help='Output directory; defaults to the character directory')
 args = ap.parse_args()
 if not 1 <= args.size <= 512:
     ap.error('--size must be between 1 and 512')
-names = ['tayne', 'celery-man', 'oyster']
+names = ['tayne', 'celery-man', 'oyster', 'eggman']
+character_ids = {'tayne': 0, 'celery-man': 1, 'oyster': 2, 'eggman': 4}
 dest = args.output or HERE.parent / args.character
 dest.mkdir(parents=True, exist_ok=True)
 
@@ -36,7 +37,8 @@ with tempfile.TemporaryDirectory() as td:
                     str(HERE.parent / "muse_pixel.c"), str(HERE.parent / "muse_default.c"),
                     "-lm", "-o", str(libpath)], check=True)
     lib = C.CDLL(str(libpath))
-    lib.muse_character_select(names.index(args.character))
+    if not lib.muse_character_select(character_ids[args.character]):
+        raise RuntimeError('Could not select preview character')
     lib.muse_pixel_render.argtypes = [C.POINTER(Pose)]
     buf = (C.c_uint16 * 4096)()
     display_buf = (C.c_uint16 * (args.size*args.size))()
@@ -58,7 +60,11 @@ with tempfile.TemporaryDirectory() as td:
             n = {'idle':8, 'listening':10, 'speaking':8, 'thinking':74, 'happy':24}.get(name,n)
         if name == 'boot':
             n = 37 if args.character == 'oyster' else 24
-        export_gif = name in ('idle', 'happy') or conversation
+        if args.character == 'eggman':
+            interval = 1/15
+            n = {'idle':15, 'listening':15, 'speaking':15, 'thinking':45, 'happy':26,
+                 'boot':27, 'error':39, 'off':34}.get(name,n)
+        export_gif = name in ('idle', 'happy') or conversation or args.character == 'eggman'
         for i in range(n):
             t = i * interval
             level = max(0, abs(math.sin(t*6.3)) * (0.55+0.45*math.sin(t*1.7+1)))
@@ -83,7 +89,7 @@ with tempfile.TemporaryDirectory() as td:
         if export_gif:
             # GIF durations are multiples of 10 ms; distribute rounding error.
             durations = [(round((i+1)*interval*100)-round(i*interval*100))*10 for i in range(n)]
-            if args.character in ('celery-man', 'oyster'):
+            if args.character in ('celery-man', 'oyster', 'eggman'):
                 palette = atlas.quantize(colors=256, method=Image.Quantize.MEDIANCUT, dither=Image.Dither.NONE)
                 display_frames = [f.quantize(palette=palette, dither=Image.Dither.NONE) for f in display_frames]
             display_frames[0].save(dest/(name+'.gif'),save_all=True,append_images=display_frames[1:],duration=durations,loop=0)

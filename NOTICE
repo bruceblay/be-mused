@@ -1,4 +1,4 @@
-Celery Man for Muse
+be-mused
 
 This project integrates with the Muse Gadget SDK:
 https://github.com/facebookincubator/muse-gadget-sdk
@@ -26,3 +26,11 @@ Those source-video images are not covered by this project's Apache code license.
 Source timestamps and processing are recorded in avatar/tayne/video-clips.json,
 avatar/celery-man/source-clips.json, avatar/oyster/source-clips.json, and
 avatar/oyster/printout-source.json.
+
+Eggman's video-*.png sheets, packed pixels in avatar/eggman/sprites.h,
+and corresponding preview GIFs contain cropped, downsampled frames from
+"'Eggman Game' Full Sketch | I Think You Should Leave with Tim Robinson | Netflix Is a Joke":
+https://www.youtube.com/watch?v=K0OSfbPJFa4
+Those source-video images are not covered by this project's Apache code license.
+Source timestamps and processing are recorded in avatar/eggman/source-clips.json
+and ART.md.

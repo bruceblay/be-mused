@@ -1,0 +1,50 @@
+diff --git a/esp32/components/muse/muse_app.c b/esp32/components/muse/muse_app.c
+--- a/esp32/components/muse/muse_app.c
++++ b/esp32/components/muse/muse_app.c
+@@ -31,6 +31,9 @@
+ #include "muse_ui.h"
+ #include "muse_voice.h"
+ #include "muse_wifi.h"
++#ifdef MUSE_CUSTOM_CHARACTERS
++#include "avatar/characters.h"
++#endif
+ 
+ static const char *TAG = "muse";
+ 
+@@ -77,7 +80,11 @@
+     ESP_ERROR_CHECK(muse_input_start(q));
+ 
+     /* Let the boot animation (flame ignites, eyes open) play out. */
++#ifdef MUSE_CUSTOM_CHARACTERS
++    vTaskDelay(pdMS_TO_TICKS(muse_character_boot_ms(muse_character_current())));
++#else
+     vTaskDelay(pdMS_TO_TICKS(1400));
++#endif
+     if (!board->audio_init) {
+         ESP_LOGI(TAG, "display-only board: no microphone or speaker");
+         muse_state_set_mode(MUSE_MODE_IDLE);
+diff --git a/esp32/components/muse/muse_input.c b/esp32/components/muse/muse_input.c
+--- a/esp32/components/muse/muse_input.c
++++ b/esp32/components/muse/muse_input.c
+@@ -43,6 +43,9 @@
+ #include "muse_ui.h"
+ #include "muse_voice.h"
+ #include "muse_wifi.h"
++#ifdef MUSE_CUSTOM_CHARACTERS
++#include "avatar/characters.h"
++#endif
+ #if CONFIG_MUSE_WATCHER_CAMERA
+ #include "boards/watcher_camera.h"
+ #endif
+@@ -92,7 +95,11 @@
+     muse_state_set_level(0);
+     muse_state_set_mode(MUSE_MODE_OFF);
+     muse_state_set_caption("GOODBYE!");
++#ifdef MUSE_CUSTOM_CHARACTERS
++    vTaskDelay(pdMS_TO_TICKS(muse_character_off_ms(muse_character_current())));
++#else
+     vTaskDelay(pdMS_TO_TICKS(GOODBYE_MS));
++#endif
+     esp_err_t err = muse_board->power_off();
+     /* Only reached if the board couldn't power off. */
+     vTaskDelay(pdMS_TO_TICKS(500));

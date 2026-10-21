@@ -4,7 +4,10 @@
 #include "../muse_default.h"
 #include "sprites.h"
 #include "../celery-man/sprites.h"
+#define OYSTER_VERIFY_RAW
 #include "../oyster/sprites.h"
+#define EGGMAN_VERIFY_RAW
+#include "../eggman/sprites.h"
 #include <assert.h>
 #include <stdio.h>
 #include <string.h>
@@ -12,13 +15,17 @@
 static uint16_t full[512*512], strip[512*16+2];
 int main(void)
 {
-    /* Native avatar sizes: AIPI 96, sticks 128, Watcher 256, Waveshare 320.
+    /* Native avatar sizes include Cardputer 90, BOX-3/Core 160 and LCD7 288.
      * Panel sizes and odd widths also exercise non-integer scaling. */
-    const int sizes[] = {1, 64, 96, 128, 135, 192, 240, 256, 320, 368, 412, 448, 466, 512};
-    assert(muse_character_count() == 4);
+    const int sizes[] = {1, 64, 90, 96, 128, 135, 160, 192, 240, 256, 288, 320, 368, 412, 448, 466, 512};
+    assert(muse_character_count() == 5);
+    for (int c=0; c<muse_character_count(); c++) {
+        assert(muse_character_boot_ms(c) == (c == MUSE_CHARACTER_EGGMAN ? 1800 : 1400));
+        assert(muse_character_off_ms(c) == (c == MUSE_CHARACTER_EGGMAN ? 2200 : 1500));
+    }
     assert(!muse_character_select(-1));
-    assert(!muse_character_select(4));
-    unsigned hashes[4] = {0};
+    assert(!muse_character_select(5));
+    unsigned hashes[5] = {0};
     for (int c=0; c<muse_character_count(); c++) {
     assert(muse_character_select(c));
     assert(muse_character_current() == c);
@@ -55,12 +62,13 @@ int main(void)
         }
     }
     }
-    for (int i=0; i<4; i++) for (int j=i+1; j<4; j++) assert(hashes[i] != hashes[j]);
+    for (int i=0; i<5; i++) for (int j=i+1; j<5; j++) assert(hashes[i] != hashes[j]);
     /* Walk complete animation cycles, including every sampled Tayne video frame.
      * The one-pose strip checks above cannot catch a bad sprite index later. */
     muse_pixel_set_size(64);
     unsigned dance_hashes[24] = {0};
-    for (int c=0; c<3; c++) {
+    for (int c=0; c<muse_character_count(); c++) {
+        if (c == MUSE_CHARACTER_DEFAULT) continue;
         assert(muse_character_select(c));
         for (int mode=0; mode<MUSE_MODE_COUNT; mode++) {
             for (int happy=0; happy<2; happy++) {
@@ -188,6 +196,21 @@ int main(void)
             }
         }
     }
+    /* Lossless decoding shares the render buffer. Downward boot/off shifts
+     * must read the original source rows, not already moved or dimmed rows. */
+    for (int off=0; off<2; off++) {
+        muse_pose_t p={.mode=off ? MUSE_MODE_OFF : MUSE_MODE_BOOT,
+                      .t=2500, .mode_t=off ? 0.6f : 0.3f};
+        muse_pixel_render(&p); muse_pixel_scale(full,64,0,63,0,63);
+        int shift=off ? 2 : 7, divisor=2;
+        int frame=off ? OYSTER_FRONT_FIRST+7 : OYSTER_PRINTOUT_FIRST+4;
+        for (int y=0; y<64; y++) for (int x=0; x<64; x++) {
+            uint16_t c=y<shift ? 0 : oyster_sprites[frame][(y-shift)*64+x];
+            uint16_t expected=((((c>>11)&31)/divisor)<<11) |
+                              ((((c>>5)&63)/divisor)<<5) | ((c&31)/divisor);
+            assert(full[y*64+x]==expected);
+        }
+    }
     /* Happy waves the greeting, then returns to the headbang. */
     {
         muse_pose_t p={.mode=MUSE_MODE_IDLE,.t=3000,.mode_t=0};
@@ -198,9 +221,69 @@ int main(void)
         muse_pixel_render(&p); muse_pixel_scale(full,64,0,63,0,63);
         assert(memcmp(full,oyster_sprites[OYSTER_IDLE_FIRST],4096*2)==0);
     }
+    /* Eggman preserves each recorded sample, including the padded 26-frame
+     * rear sheet. Audio levels do not stop chewing; ready and neutral hold source frames. */
+    assert(MUSE_CHARACTER_DEFAULT == 3);
+    assert(!strcmp(muse_character_name(MUSE_CHARACTER_EGGMAN), "Eggman"));
+    assert(muse_character_select(MUSE_CHARACTER_EGGMAN));
+    for (int entry=0; entry<2; entry++) {
+        for (int mode=MUSE_MODE_IDLE; mode<=MUSE_MODE_SPEAKING; mode++) {
+            for (int tick=0; tick<90; tick++) {
+                int frame=mode==MUSE_MODE_IDLE ? EGGMAN_WAITING_FIRST :
+                          mode==MUSE_MODE_SPEAKING ? EGGMAN_CHEW_FIRST+tick%EGGMAN_CHEW_COUNT :
+                          mode==MUSE_MODE_THINKING ? EGGMAN_TURN_FIRST+tick%EGGMAN_TURN_COUNT :
+                          EGGMAN_NEUTRAL_FIRST;
+                muse_pose_t p={.mode=mode, .t=4000+entry*20+tick/15.0f,
+                              .mode_t=tick/15.0f, .level=entry ? 0.8f : 0};
+                muse_pixel_render(&p); muse_pixel_scale(full,64,0,63,0,63);
+                int rows=mode==MUSE_MODE_THINKING ? 62 : 64;
+                assert(memcmp(full,eggman_sprites[frame],64*rows*2)==0);
+            }
+        }
+        muse_pose_t p={.mode=MUSE_MODE_IDLE, .t=5000+entry*20};
+        muse_pixel_render(&p);
+        for (int tick=0; tick<78; tick++) {
+            p.happy=1; p.t=5000+entry*20+(tick ? tick+0.25f : 0)/15.0f;
+            muse_pixel_render(&p); muse_pixel_scale(full,64,0,63,0,63);
+            for (int y=0; y<64; y++) for (int x=0; x<64; x++) {
+                if ((x>=12 && x<=14 && y>=13 && y<=21) ||
+                    (x>=50 && x<=52 && y>=19 && y<=27)) continue;
+                assert(full[y*64+x]==eggman_sprites[EGGMAN_REAR_FIRST+tick%EGGMAN_REAR_COUNT][y*64+x]);
+            }
+        }
+        p.happy=0; p.mode_t=0;
+        muse_pixel_render(&p); muse_pixel_scale(full,64,0,63,0,63);
+        assert(memcmp(full,eggman_sprites[EGGMAN_WAITING_FIRST],4096*2)==0);
+    }
+    /* Startup/error play each source sample once, then hold their final pose.
+     * Shutdown retains the entire lowering clip before fading to black. */
+    for (int entry=0; entry<2; entry++) {
+        const int modes[] = {MUSE_MODE_BOOT, MUSE_MODE_ERROR, MUSE_MODE_OFF};
+        for (int m=0; m<3; m++) {
+            int count = m == 0 ? EGGMAN_FRONT_REVEAL_COUNT : EGGMAN_FRONT_LOWER_COUNT;
+            int first = m == 0 ? EGGMAN_FRONT_REVEAL_FIRST : EGGMAN_FRONT_LOWER_FIRST;
+            for (int tick=0; tick<75; tick++) {
+                muse_pose_t p={.mode=modes[m], .t=6000+entry*20+tick/15.0f,
+                              .mode_t=tick/15.0f, .happy=m == 0 ? 0 : 1};
+                muse_pixel_render(&p); muse_pixel_scale(full,64,0,63,0,63);
+                int frame=first+(tick<count ? tick : count-1);
+                if (m == 2 && tick >= count && tick < 33) continue; /* fade interval */
+                for (int y=0; y<64; y++) for (int x=0; x<64; x++) {
+                    if (m == 1 && x == 59 && ((y>=12 && y<17) || y == 19)) continue;
+                    uint16_t c=eggman_sprites[frame][y*64+x];
+                    if (m == 1) c=(uint16_t)(((int)(((c>>11)&31)*0.65f)<<11) |
+                                             ((int)(((c>>5)&63)*0.65f)<<5) |
+                                             (int)((c&31)*0.65f));
+                    if (m == 2 && tick >= 33) c=0;
+                    assert(full[y*64+x] == c);
+                }
+            }
+        }
+    }
     /* Return to the default repeatedly after rendering each custom character. */
     muse_pixel_set_size(64);
-    for (int i=0; i<3; i++) {
+    for (int i=0; i<muse_character_count(); i++) {
+        if (i == MUSE_CHARACTER_DEFAULT) continue;
         muse_pose_t p={.mode=MUSE_MODE_IDLE, .t=12, .mode_t=1};
         assert(muse_character_select(i));
         muse_pixel_render(&p);
@@ -211,6 +294,6 @@ int main(void)
         muse_default_scale(strip, 64, 0, 63, 0, 15);
         assert(memcmp(full, strip, 64*16*2)==0);
     }
-    puts("Four avatars, default-renderer equivalence, switching, seven modes and fourteen strip sizes verified.");
+    puts("Five avatars, default-renderer equivalence, switching, seven modes and seventeen strip sizes verified.");
     return 0;
 }

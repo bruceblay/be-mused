@@ -1,0 +1,157 @@
+{
+  "source": "https://www.youtube.com/watch?v=K0OSfbPJFa4",
+  "title": "'Eggman Game' Full Sketch | I Think You Should Leave with Tim Robinson | Netflix Is a Joke",
+  "source_resolution": [
+    1920,
+    1080
+  ],
+  "fps": 15,
+  "frame_size": [
+    64,
+    64
+  ],
+  "columns": 8,
+  "processing": "Consecutive source samples at 15 fps. Background masks derived from the filmed outline and local screen color; no generated poses, interpolation, mirroring, or repainted features. Source camera motion and filmed transition ghosting are retained. Neutral and waiting each hold one source frame.",
+  "clips": [
+    {
+      "name": "neutral",
+      "start": 112.2,
+      "frames": 1,
+      "crop": [
+        710,
+        500,
+        530,
+        530
+      ],
+      "size": [
+        64,
+        64
+      ],
+      "pos": [
+        0,
+        0
+      ],
+      "description": "Filmed neutral pose held for listening"
+    },
+    {
+      "name": "chew",
+      "start": 8.6,
+      "frames": 15,
+      "crop": [
+        340,
+        540,
+        280,
+        320
+      ],
+      "size": [
+        51,
+        58
+      ],
+      "pos": [
+        7,
+        4
+      ],
+      "description": "Chewing and reopening the mouth after the cursor leaves; speaking"
+    },
+    {
+      "name": "turn",
+      "start": 112.9,
+      "frames": 15,
+      "crop": [
+        710,
+        500,
+        530,
+        530
+      ],
+      "size": [
+        64,
+        64
+      ],
+      "pos": [
+        0,
+        0
+      ],
+      "description": "Front-to-back turn; thinking"
+    },
+    {
+      "name": "rear",
+      "start": 116.65,
+      "frames": 26,
+      "crop": [
+        710,
+        500,
+        530,
+        530
+      ],
+      "size": [
+        64,
+        64
+      ],
+      "pos": [
+        0,
+        0
+      ],
+      "description": "Rear-facing crouch gag; happy"
+    },
+    {
+      "name": "waiting",
+      "start": 9.0,
+      "frames": 1,
+      "crop": [
+        340,
+        540,
+        280,
+        320
+      ],
+      "size": [
+        51,
+        58
+      ],
+      "pos": [
+        7,
+        4
+      ],
+      "description": "Open-mouth waiting-to-be-fed pose held while ready/idle"
+    },
+    {
+      "name": "front-lower",
+      "start": 103.85,
+      "frames": 26,
+      "crop": [
+        865,
+        490,
+        245,
+        250
+      ],
+      "size": [
+        63,
+        64
+      ],
+      "pos": [
+        0,
+        0
+      ],
+      "description": "Wider shot: neutral, hands grab waistband, pants lower to reveal the front. Original camera movement retained. Error and power off."
+    },
+    {
+      "name": "front-reveal",
+      "start": 110.4,
+      "frames": 24,
+      "crop": [
+        710,
+        500,
+        530,
+        530
+      ],
+      "size": [
+        64,
+        64
+      ],
+      "pos": [
+        0,
+        0
+      ],
+      "description": "Close-up starts with pants already down, then pulls them up and returns to neutral. This is not the lowering motion. Startup."
+    }
+  ]
+}

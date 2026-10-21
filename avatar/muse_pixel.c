@@ -7,6 +7,7 @@
 #include "tayne/sprites.h"
 #include "celery-man/sprites.h"
 #include "oyster/sprites.h"
+#include "eggman/sprites.h"
 #include "characters.h"
 #include "muse_default.h"
 #ifdef ESP_PLATFORM
@@ -21,8 +22,9 @@ static const struct {
 } characters[] = {
     {"tayne", "Tayne", tayne_sprites, 0xf3c971},
     {"celery-man", "Celery Man", celery_man_sprites, 0xb6d9e9},
-    {"oyster", "Oyster", oyster_sprites, 0xf17d79},
+    {"oyster", "Oyster", NULL, 0xf17d79},
     {"muse", "Default pet", NULL, 0},
+    {"eggman", "Eggman", NULL, 0xb6dce5},
 };
 static int character;
 static bool loaded;
@@ -32,6 +34,42 @@ static bool nvs_ready;
 #endif
 
 static uint16_t pixels[MUSE_PX_W * MUSE_PX_H];
+/* Decode into the existing render buffer. Each sequence begins with an
+ * independent frame; later frames can retain unchanged pixels. Replaying
+ * from the nearest keyframe also supports arbitrary seeks and mode changes. */
+static uint16_t sprite_word(const uint8_t **src)
+{
+    uint16_t value = (*src)[0] | ((uint16_t)(*src)[1] << 8);
+    *src += 2;
+    return value;
+}
+static void sprite_decode(int frame, const uint8_t *data, const uint32_t *offsets,
+                          const uint8_t *keyframes, const uint16_t *palette)
+{
+    for (int f = keyframes[frame]; f <= frame; f++) {
+        const uint8_t *src = data + offsets[f];
+        int at = 0;
+        while (at < MUSE_PX_W * MUSE_PX_H) {
+            uint8_t command = *src++;
+            int count = (command & 63) + 1;
+            if (count == 64) count = sprite_word(&src);
+            if (command & 0x80) {
+                at += count;
+            } else if (command & 0x40) {
+                int distance = sprite_word(&src);
+                while (count--) {
+                    pixels[at] = pixels[at-distance];
+                    at++;
+                }
+            } else {
+                while (count--) {
+                    uint8_t index = *src++;
+                    pixels[at++] = index == 255 ? sprite_word(&src) : palette[index];
+                }
+            }
+        }
+    }
+}
 static int size = MUSE_PX_W * 2;
 static float pet_started;
 static float last_t;
@@ -86,6 +124,12 @@ static float clamp01(float v) { return v < 0 ? 0 : v > 1 ? 1 : v; }
 static int video_frame(float seconds, int count)
 {
     return (int)(fmodf(seconds, count/15.0f) * 15 + 0.0001f) % count;
+}
+
+static int video_once(float seconds, int count)
+{
+    int frame = (int)(fminf(seconds, count/15.0f) * 15 + 0.0001f);
+    return frame < count ? frame : count - 1;
 }
 
 /* Oyster thinks by printing his portrait: play the 28-frame printout, hold
@@ -145,63 +189,104 @@ void muse_pixel_render(const muse_pose_t *p)
     last_t = t;
     int frame = 0, dy = 0;
     float light = 1;
-    switch (p->mode) {
-    case MUSE_MODE_BOOT:
-        /* Tayne boots into Flarhgunnstow; the others reuse their thinking loops. */
-        frame = selected == 0 ? TAYNE_HAPPY_FIRST + video_frame(mt, TAYNE_HAPPY_COUNT) :
-            selected == 1 ? CELERY_MAN_IDLE_FIRST + video_frame(mt, CELERY_MAN_IDLE_COUNT) :
-            OYSTER_PRINTOUT_FIRST + oyster_print_frame(mt);
-        dy = (int)(12 * (1 - clamp01(mt / 0.8f)));
-        light = clamp01(mt / 0.6f);
-        break;
-    case MUSE_MODE_IDLE:
-        frame = selected == 0 ? TAYNE_IDLE_FIRST + video_frame(mt, TAYNE_IDLE_COUNT) :
-            selected == 1 ? CELERY_MAN_IDLE_FIRST + video_frame(mt, CELERY_MAN_IDLE_COUNT) :
-            OYSTER_IDLE_FIRST + video_frame(mt, OYSTER_IDLE_COUNT);
-        break;
-    case MUSE_MODE_LISTENING:
-        frame = selected == 0 ? TAYNE_LISTENING_FIRST + video_frame(mt, TAYNE_LISTENING_COUNT) :
-            selected == 1 ? CELERY_MAN_SHUFFLE_FIRST + video_frame(mt, CELERY_MAN_SHUFFLE_COUNT) :
-            OYSTER_LISTENING_FIRST + video_frame(mt, OYSTER_LISTENING_COUNT);
-        break;
-    case MUSE_MODE_THINKING:
-        frame = selected == 0 ? TAYNE_THINKING_FIRST + video_frame(mt, TAYNE_THINKING_COUNT) :
-            selected == 1 ? CELERY_MAN_IDLE_FIRST + video_frame(mt, CELERY_MAN_IDLE_COUNT) :
-            OYSTER_PRINTOUT_FIRST + oyster_print_frame(mt);
-        break;
-    case MUSE_MODE_SPEAKING:
-        if (selected == 0) {
-            /* Speaking is the playback signal. The meter can be zero or stale,
-             * so it must not prevent the filmed sequence from advancing. */
-            frame = TAYNE_FRONT_FIRST + video_frame(mt, TAYNE_FRONT_COUNT);
-        } else if (selected == 1) {
-            frame = CELERY_MAN_SHUFFLE_FIRST + video_frame(mt, CELERY_MAN_SHUFFLE_COUNT);
-        } else {
-            frame = OYSTER_FRONT_FIRST + video_frame(mt, OYSTER_FRONT_COUNT);
+    if (selected == MUSE_CHARACTER_EGGMAN) {
+        /* Keep the filmed poses and cadence, including the held neutral pose.
+         * Fades and status indicators are UI; no added character movement. */
+        switch (p->mode) {
+        case MUSE_MODE_BOOT:
+            frame = EGGMAN_FRONT_REVEAL_FIRST + video_once(mt, EGGMAN_FRONT_REVEAL_COUNT);
+            break;
+        case MUSE_MODE_IDLE:
+            frame = EGGMAN_WAITING_FIRST;
+            break;
+        case MUSE_MODE_THINKING:
+            frame = EGGMAN_TURN_FIRST + video_frame(mt, EGGMAN_TURN_COUNT);
+            break;
+        case MUSE_MODE_SPEAKING:
+            frame = EGGMAN_CHEW_FIRST + video_frame(mt, EGGMAN_CHEW_COUNT);
+            break;
+        case MUSE_MODE_ERROR:
+            light = 0.65f;
+            frame = EGGMAN_FRONT_LOWER_FIRST + video_once(mt, EGGMAN_FRONT_LOWER_COUNT);
+            break;
+        case MUSE_MODE_OFF:
+            frame = EGGMAN_FRONT_LOWER_FIRST + video_once(mt, EGGMAN_FRONT_LOWER_COUNT);
+            light = 1 - clamp01((mt - EGGMAN_FRONT_LOWER_COUNT/15.0f) / 0.35f);
+            break;
+        default: frame = EGGMAN_NEUTRAL_FIRST; break;
         }
-        break;
-    case MUSE_MODE_ERROR:
-        frame = selected == 0 ? TAYNE_FRONT_FIRST + 9 : selected == 1 ? CELERY_MAN_IDLE_FIRST : OYSTER_FRONT_FIRST + 7;
-        light = 0.65f;
-        break;
-    case MUSE_MODE_OFF:
-        frame = selected == 0 ? TAYNE_FRONT_FIRST + 9 : selected == 1 ? CELERY_MAN_IDLE_FIRST : OYSTER_FRONT_FIRST + 7;
-        light = 1 - clamp01(mt / 1.2f);
-        dy = (int)(clamp01(mt / 1.2f) * 5);
-        break;
-    default: frame = selected == 0 ? TAYNE_FRONT_FIRST + 9 : selected == 1 ? CELERY_MAN_IDLE_FIRST : OYSTER_FRONT_FIRST + 7; break;
-    }
-    if (happy) {
-        frame = selected == 0 ? TAYNE_HAPPY_FIRST + video_frame(fmaxf(0, t-pet_started), TAYNE_HAPPY_COUNT) :
-            selected == 1 ? CELERY_MAN_HAPPY_FIRST + video_frame(fmaxf(0, t-pet_started), CELERY_MAN_HAPPY_COUNT) :
-            OYSTER_FRONT_FIRST + video_frame(fmaxf(0, t-pet_started), OYSTER_FRONT_COUNT);
+        if (happy)
+            frame = EGGMAN_REAR_FIRST + video_frame(fmaxf(0, t-pet_started), EGGMAN_REAR_COUNT);
+    } else {
+        switch (p->mode) {
+        case MUSE_MODE_BOOT:
+            /* Tayne boots into Flarhgunnstow; the others reuse their thinking loops. */
+            frame = selected == 0 ? TAYNE_HAPPY_FIRST + video_frame(mt, TAYNE_HAPPY_COUNT) :
+                selected == 1 ? CELERY_MAN_IDLE_FIRST + video_frame(mt, CELERY_MAN_IDLE_COUNT) :
+                OYSTER_PRINTOUT_FIRST + oyster_print_frame(mt);
+            dy = (int)(12 * (1 - clamp01(mt / 0.8f)));
+            light = clamp01(mt / 0.6f);
+            break;
+        case MUSE_MODE_IDLE:
+            frame = selected == 0 ? TAYNE_IDLE_FIRST + video_frame(mt, TAYNE_IDLE_COUNT) :
+                selected == 1 ? CELERY_MAN_IDLE_FIRST + video_frame(mt, CELERY_MAN_IDLE_COUNT) :
+                OYSTER_IDLE_FIRST + video_frame(mt, OYSTER_IDLE_COUNT);
+            break;
+        case MUSE_MODE_LISTENING:
+            frame = selected == 0 ? TAYNE_LISTENING_FIRST + video_frame(mt, TAYNE_LISTENING_COUNT) :
+                selected == 1 ? CELERY_MAN_SHUFFLE_FIRST + video_frame(mt, CELERY_MAN_SHUFFLE_COUNT) :
+                OYSTER_LISTENING_FIRST + video_frame(mt, OYSTER_LISTENING_COUNT);
+            break;
+        case MUSE_MODE_THINKING:
+            frame = selected == 0 ? TAYNE_THINKING_FIRST + video_frame(mt, TAYNE_THINKING_COUNT) :
+                selected == 1 ? CELERY_MAN_IDLE_FIRST + video_frame(mt, CELERY_MAN_IDLE_COUNT) :
+                OYSTER_PRINTOUT_FIRST + oyster_print_frame(mt);
+            break;
+        case MUSE_MODE_SPEAKING:
+            if (selected == 0) {
+                /* Speaking is the playback signal. The meter can be zero or stale,
+                 * so it must not prevent the filmed sequence from advancing. */
+                frame = TAYNE_FRONT_FIRST + video_frame(mt, TAYNE_FRONT_COUNT);
+            } else if (selected == 1) {
+                frame = CELERY_MAN_SHUFFLE_FIRST + video_frame(mt, CELERY_MAN_SHUFFLE_COUNT);
+            } else {
+                frame = OYSTER_FRONT_FIRST + video_frame(mt, OYSTER_FRONT_COUNT);
+            }
+            break;
+        case MUSE_MODE_ERROR:
+            frame = selected == 0 ? TAYNE_FRONT_FIRST + 9 : selected == 1 ? CELERY_MAN_IDLE_FIRST : OYSTER_FRONT_FIRST + 7;
+            light = 0.65f;
+            break;
+        case MUSE_MODE_OFF:
+            frame = selected == 0 ? TAYNE_FRONT_FIRST + 9 : selected == 1 ? CELERY_MAN_IDLE_FIRST : OYSTER_FRONT_FIRST + 7;
+            light = 1 - clamp01(mt / 1.2f);
+            dy = (int)(clamp01(mt / 1.2f) * 5);
+            break;
+        default: frame = selected == 0 ? TAYNE_FRONT_FIRST + 9 : selected == 1 ? CELERY_MAN_IDLE_FIRST : OYSTER_FRONT_FIRST + 7; break;
+        }
+        if (happy) {
+            frame = selected == 0 ? TAYNE_HAPPY_FIRST + video_frame(fmaxf(0, t-pet_started), TAYNE_HAPPY_COUNT) :
+                selected == 1 ? CELERY_MAN_HAPPY_FIRST + video_frame(fmaxf(0, t-pet_started), CELERY_MAN_HAPPY_COUNT) :
+                OYSTER_FRONT_FIRST + video_frame(fmaxf(0, t-pet_started), OYSTER_FRONT_COUNT);
+        }
     }
     memset(pixels, 0, sizeof(pixels));
-    for (int y = 0; y < MUSE_PX_H; y++) {
+    bool packed = selected == MUSE_CHARACTER_EGGMAN || selected == 2;
+    if (selected == MUSE_CHARACTER_EGGMAN)
+        sprite_decode(frame, eggman_data, eggman_offsets, eggman_keyframes, eggman_palette);
+    else if (selected == 2)
+        sprite_decode(frame, oyster_data, oyster_offsets, oyster_keyframes, oyster_palette);
+    /* Work upward so Oyster's boot/off shift cannot overwrite decoded rows
+     * that will be read later from the same buffer. */
+    for (int y = MUSE_PX_H - 1; y >= 0; y--) {
         int sy = y - dy;
-        if (sy < 0 || sy >= MUSE_PX_H) continue;
+        if (sy < 0 || sy >= MUSE_PX_H) {
+            memset(pixels + y * MUSE_PX_W, 0, MUSE_PX_W * sizeof(uint16_t));
+            continue;
+        }
         for (int x = 0; x < MUSE_PX_W; x++) {
-            uint16_t c = characters[selected].frames[frame][sy * MUSE_PX_W + x];
+            uint16_t c = packed ? pixels[sy * MUSE_PX_W + x] :
+                characters[selected].frames[frame][sy * MUSE_PX_W + x];
             pixels[y * MUSE_PX_W + x] = light < 1 ? dim(c, light) : c;
         }
     }

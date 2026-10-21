@@ -11,11 +11,16 @@ from PIL import Image, ImageDraw, ImageFont
 from boards import BOARDS
 
 ROOT = Path(__file__).resolve().parents[1]
-NAMES = ['Tayne', 'Celery Man', 'Oyster']
-ACCENTS = ['#f3c971', '#b6d9e9', '#f17d79']
-# Exact 15 fps sequences; Oyster's thinking sequence includes the held smile.
+# Firmware ID 3 is the default pet; Eggman is ID 4.
+NAMES = {0: 'Tayne', 1: 'Celery Man', 2: 'Oyster', 4: 'Eggman'}
+ACCENTS = {0: '#f3c971', 1: '#b6d9e9', 2: '#f17d79', 4: '#b6dce5'}
+STATUS = {0: 'WAKING UP', 1: 'READY', 3: 'THINKING', 6: 'GOODBYE!'}
+# Exact 15 fps sequences; include Oyster's held smile and Eggman's complete
+# startup and shutdown clips, including the final shutdown fade.
 TIMELINE = [(0, 1, 'Idle', 24), (1, 1, 'Idle', 24),
-            (2, 1, 'Idle', 16), (2, 3, 'Thinking / printout', 37)]
+            (2, 1, 'Idle', 16), (2, 3, 'Thinking / printout', 37),
+            (4, 0, 'Startup / front reveal', 27), (4, 1, 'Ready', 15),
+            (4, 6, 'Power off / pants lowering', 33)]
 CARD = (360, 408)
 
 class Pose(C.Structure):
@@ -34,7 +39,7 @@ def centered(draw, text, y, size, color):
 def avatar_top(board):
     # Normal avatar position from the pinned SDK's muse_ui.c. Caption/control
     # drawing is illustrative; this is not an LVGL screenshot or a case model.
-    if board.width < 200:
+    if board.compact:
         return (board.height-board.avatar)//2
     ring_in = min(board.width, board.height)//2-10
     cap_bottom = int(math.sqrt(ring_in*ring_in-256*256//4))-3 if board.round else 179
@@ -47,15 +52,15 @@ def draw_card(board, avatar, character, mode, label, progress):
     panel = Image.new('RGB', (board.width, board.height))
     panel.paste(avatar, ((board.width-board.avatar)//2, avatar_top(board)))
     draw = ImageDraw.Draw(panel)
-    accent = '#c2a1ff' if mode == 3 else ACCENTS[character]
-    if board.width >= 200:
+    accent = {3: '#c2a1ff', 6: '#8791a5'}.get(mode, ACCENTS[character])
+    if not board.compact:
         diameter = min(board.width,board.height)-8
         x,y=(board.width-diameter)//2,(board.height-diameter)//2
         draw.ellipse((x,y,x+diameter-1,y+diameter-1),outline='#140f22',width=6)
     if board.height >= 200:
-        y = 22 if board.width < 200 else 40+(0 if board.round else (board.height-466)//2)
-        draw.text((board.width//2,y),'THINKING' if mode==3 else 'READY',
-                  font=font(8 if board.width<200 else 16),fill=accent,anchor='mt')
+        y = 64 if board.profile == 'm5stack-stopwatch' else 22 if board.compact else 40+(0 if board.round else (board.height-466)//2)
+        draw.text((board.width//2,y),STATUS[mode],
+                  font=font(8 if board.compact else 16),fill=accent,anchor='mt')
     scale = min(264/board.width,264/board.height)
     pw,ph=round(board.width*scale),round(board.height*scale)
     panel=panel.resize((pw,ph),Image.Resampling.NEAREST)
@@ -91,9 +96,13 @@ def main():
                         '-lm','-o',str(binary)],check=True)
         lib=C.CDLL(str(binary));lib.muse_pixel_render.argtypes=[C.POINTER(Pose)]
         for key,board in BOARDS.items():
-            frames=[];pixels=(C.c_uint16*(board.avatar*board.avatar))()
+            frames=[];segments=[];pixels=(C.c_uint16*(board.avatar*board.avatar))()
             for character,mode,label,count in TIMELINE:
-                lib.muse_character_select(character);lib.muse_pixel_set_size(board.avatar)
+                if not lib.muse_character_select(character):
+                    raise RuntimeError(f'Unknown character ID: {character}')
+                lib.muse_pixel_set_size(board.avatar)
+                segments.append({'character':NAMES[character], 'mode':label,
+                                 'first_frame':len(frames), 'frames':count})
                 for tick in range(count):
                     t=tick/15
                     pose=Pose(mode,10+t,t,0,0);lib.muse_pixel_render(C.byref(pose))
@@ -112,8 +121,9 @@ def main():
                             loop=0,optimize=True,disposal=1)
             frames[0].save(args.output/f'{key}.png')
             report[key]={'panel':[board.width,board.height],'avatar':board.avatar,
-                         'frames':len(frames),'duration_ms':sum(durations),'bytes':path.stat().st_size}
-            print(key,report[key])
+                         'frames':len(frames),'duration_ms':sum(durations),'bytes':path.stat().st_size,
+                         'segments':segments}
+            print(f'{key}: {len(frames)} frames, {sum(durations)} ms, {path.stat().st_size} bytes')
     (args.output/'manifest.json').write_text(json.dumps(report,indent=2)+'\n')
 
 if __name__=='__main__':main()

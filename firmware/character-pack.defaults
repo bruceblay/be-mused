@@ -1,0 +1,2 @@
+# Reserve flash for the character animations; the optional CJK font uses about 850 KiB.
+CONFIG_MUSE_CJK_FONT=n

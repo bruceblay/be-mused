@@ -22,7 +22,7 @@ def command(board, action, port=None):
     return ['idf.py', '-B', build, f'-DIDF_TARGET={profile.target}',
             f'-DSDKCONFIG={build}/sdkconfig',
             '-DSDKCONFIG_DEFAULTS=sdkconfig.defaults;devices/sdkconfig.muse;'
-            f'devices/sdkconfig.muse-{profile.profile}',
+            f'devices/sdkconfig.muse-{profile.profile};{ROOT / "firmware/character-pack.defaults"}',
             'menuconfig' if action == 'configure' else 'build']
 
 
@@ -37,7 +37,7 @@ def main():
     args = parser.parse_args()
     if args.list:
         for key, board in BOARDS.items():
-            print(f'{key:8} {board.width}x{board.height:3}  {"touch" if board.touch else "buttons":7} {board.name}')
+            print(f'{key:8} {board.width}x{board.height:3}  {board.controls:11} {board.name}')
         return
     if not args.board:
         parser.error('Choose a board, or use --list.')

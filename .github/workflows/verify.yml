@@ -13,7 +13,7 @@ jobs:
         run: |
           git init /tmp/muse-gadget-sdk
           git -C /tmp/muse-gadget-sdk remote add origin https://github.com/facebookincubator/muse-gadget-sdk.git
-          git -C /tmp/muse-gadget-sdk fetch --depth=1 origin 1b56662588c0ea00bdee24b9bcd1835e12848e9a
+          git -C /tmp/muse-gadget-sdk fetch --depth=1 origin 812c46f9fe42b69d916613a9dc702cbac5ff7b54
           git -C /tmp/muse-gadget-sdk checkout --detach FETCH_HEAD
           python3 tools/install.py --check /tmp/muse-gadget-sdk
           python3 tools/install.py /tmp/muse-gadget-sdk
